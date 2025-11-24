@@ -887,7 +887,7 @@ endif;
 * 1 S-sum and then for an inverse binomial sum with 0 S-sums.
 *
 
-*--#[2 S-sums
+*--#[ 2 S-sums
 #write " The recursion for two S-sums now starts"
 *
 * These first 256 id statements are there to initiate the recursion if we encounter an inverse binomial sum containing two S-sums. 
@@ -6964,7 +6964,7 @@ id TT(R,X,RU(?a),RL(?b),k?,0) = 0;
 
 *--#]
 
-*--#[1 S-sum
+*--#[ 1 S-sum
 #write " The recursion for two S-sums is finished and the recursion for one S-sum now starts"
 *
 * These first 44 id statements are there to initiate the recursion if we encounter an inverse binomial sum containing one S-sum. 
@@ -7619,7 +7619,7 @@ id den(n?int_) = 1/n;
 #enddo
 *--#]
 
-*--#[0 S-sums
+*--#[ 0 S-sums
 #write " The recursion for one S-sum is finished and the recursion for no S-sum now starts"
 *
 * These first 6 id statements are there to initiate the recursion if we encounter an inverse binomial sum containing no S-sums.
@@ -7736,19 +7736,19 @@ id den(n?int_) = 1/n;
 #enddo
 *--#]
 
-*--#[Fixing the length of the X-vector in the S-sums
+*--#[ Fixing the length of the X-vector in the S-sums
 repeat id S(R(?a),X(?b),n?)*g(c?{>0}) = S(R(?a),X(?b,1),n)*g(c-1);
 id g(0) = 1;
 *--#]
 
-*--#[Special cases for the S-sums
+*--#[ Special cases for the S-sums
 id S(R,n?) = 1;
 id S(R(?a),0) = 0;
 id S(R,X,n?) = 1;
 id S(R(?a),X(?b),0) = 0;
 *--#]
 
-*--#[Solving the harmonic sums of the form S(R(?a),1)
+*--#[ Solving the harmonic sums of the form S(R(?a),1)
 #do i = 1,1
 id S(R(a?{<0},?b),X(c?,?d),1) = -c*S(R(?b),X(?d),1);
 id S(R(a?{>=0},?b),X(c?,?d),1) = c*S(R(?b),X(?d),1);
@@ -7760,7 +7760,7 @@ endif;
 id S(R,X,1) = 1;
 *--#]
 
-*--#[Resetting the Splitarg function for sums that contain the inverse binomial sum as a nested sub-sum
+*--#[ Resetting the Splitarg function for sums that contain the inverse binomial sum as a nested sub-sum
 id den(?x,k?{>0}) = den(?x)^k;
 repeat id den(a?,b?,?c) = den(a+b,?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
