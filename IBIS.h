@@ -1,7 +1,7 @@
 *--#[ Declaration of variables
 * Defining all the symbols and function that we use internally and externally
 S a,b,c,d,e,w,x,y,z,n,k,m,jjj,jj,j;
-CF g, g1, GG, TT, RU, RL, den, R, S, X, sum, invbino, bino, sign;
+CF g, g1, GG, TT, RU, RL, den, R, S, X, sum, invbino, bino, sign, SXbad;
 * Here we define the dollar variables that we will later use for checks
 #$zeroindex = 0;
 #$check1 = 0;
@@ -7763,7 +7763,9 @@ id S(R,X,1) = 1;
 *--#[ Resetting the Splitarg function for sums that contain the inverse binomial sum as a nested sub-sum
 id den(?x,k?{>0}) = den(?x)^k;
 repeat id den(a?,b?,?c) = den(a+b,?c);
+id S(R(?a),X(?b),?c) = SXbad(R(?a),X(?b),?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
+id SXbad(?a) = S(?a);
 .sort
 *--#]
 
@@ -7814,7 +7816,9 @@ id S(R,?a) = 1;
 id S(R(?a),d?int_,-j1,n) = S(R(?a),d+n-j1);
 id S(R(?a),d?int_,j1) = S(R(?a),j1+d);
 id S(R(?a),-j1,n) = S(R(?a),n-j1);
+id S(R(?a),X(?b),?c) = SXbad(R(?a),X(?b),?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
+id SXbad(?a) = S(?a);
 #endprocedure
 *--#]
 
@@ -8502,7 +8506,9 @@ id den(n?int_) = 1/n;
 id invbino(n?int_,j?int_) = 1/binom_(n,j);
 id den(?x,k?{>0}) = den(?x)^k;
 repeat id den(a?,b?,?c) = den(a+b,?c);
+id S(R(?a),X(?b),?c) = SXbad(R(?a),X(?b),?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
+id SXbad(?a) = S(?a);
 .sort
 #endprocedure
 *--#]
@@ -8605,7 +8611,9 @@ id den(n?int_) = 1/n;
 id invbino(n?int_,j?int_) = 1/binom_(n,j);
 id den(?x,k?{>0}) = den(?x)^k;
 repeat id den(a?,b?,?c) = den(a+b,?c);
+id S(R(?a),X(?b),?c) = SXbad(R(?a),X(?b),?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
+id SXbad(?a) = S(?a);
 .sort
 #endprocedure
 *--#]
