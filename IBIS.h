@@ -1,7 +1,7 @@
 *--#[ Declaration of variables
 * Defining all the symbols and function that we use internally and externally
 S a,b,c,d,e,w,x,y,z,n,k,m,jjj,jj,j;
-CF g, g1, GG, TT, RU, RL, den, R, S, X, sum, invbino, bino, sign, SXbad;
+CF g, g1, GG, TT, RU, RL, den, R, S, X, sum, invbino, bino, sign, SXbad, pow;
 * Here we define the dollar variables that we will later use for checks
 #$zeroindex = 0;
 #$check1 = 0;
@@ -7766,6 +7766,7 @@ repeat id den(a?,b?,?c) = den(a+b,?c);
 id S(R(?a),X(?b),?c) = SXbad(R(?a),X(?b),?c);
 repeat id S(R(?a),b?,c?,?d) = S(R(?a),b+c,?d);
 id SXbad(?a) = S(?a);
+id den(x?number_)^j? = pow(1/x,j);
 .sort
 *--#]
 
@@ -8514,36 +8515,36 @@ id SXbad(?a) = S(?a);
 *--#]
 
 *--#[ Denflip
-#Procedure Denflip
+#Procedure Denflip(n)
 *
 * Procedure to rewrite an inverse binomial sum with n-j as its denominator into an inverse binomial sum with j as its denominator
 *
 .sort
 * First we rewrite the input into a format that can easily be recognized by FORM
 Splitarg, den, sum, S;
-id den(c?,j,-n) = (-1)*den(-c,-j,n);
-id den(c?,-j,n) = den(c,-j,n,1);
-repeat id den(c?,-j,n,m?{>0})*den(c?,-j,n,x?{>0}) = den(c,-j,n,m+x);
-id den(j,-n) = (-1)*den(-j,n);
-id den(-j,n) = den(-j,n,1);
-repeat id den(-j,n,m?{>0})*den(-j,n,x?{>0}) = den(-j,n,m+x);
+id den(c?,j,-`n') = (-1)*den(-c,-j,`n');
+id den(c?,-j,`n') = den(c,-j,`n',1);
+repeat id den(c?,-j,`n',m?{>0})*den(c?,-j,`n',x?{>0}) = den(c,-j,`n',m+x);
+id den(j,-`n') = (-1)*den(-j,`n');
+id den(-j,`n') = den(-j,`n',1);
+repeat id den(-j,`n',m?{>0})*den(-j,`n',x?{>0}) = den(-j,`n',m+x);
 id den(c?,-j) = (-1)*den(-c,j);
 id den(c?,j) = den(c,j,1);
 repeat id den(c?,j,m?{>0})*den(c?,j,n?{>0}) = den(c,j,m+n);
 id den(-j) = (-1)*den(j);
 id den(j) = den(j,1);
 repeat id den(j,m?{>0})*den(j,n?{>0}) = den(j,m+n);
-id den(c?int_,n) = den(n+c);
-id den(c?int_,-n) = den(-n+c);
-id S(R(?a),c?int_,n) = S(R(?a),n+c);
-id S(R(?a),c?int_,-n) = S(R(?a),-n+c);
+id den(c?int_,`n') = den(`n'+c);
+id den(c?int_,-`n') = den(-`n'+c);
+id S(R(?a),c?int_,`n') = S(R(?a),`n'+c);
+id S(R(?a),c?int_,-`n') = S(R(?a),-`n'+c);
 
 *--#[ Check
 * Here we check if the upper limit of the inverse binomial sum is too high
-if ((match(once,sum(j,w?,x?{>0},n)*invbino(n,j)*den(c?int_,-j,n,k?{>0})))||
-    (match(once,sum(j,w?,n)*invbino(n,j)*den(-j,n,k?{>0})))||
-    (match(once,sum(j,w?,x?{>0},n)*invbino(n,j)*den(-j,n,k?{>0})))||
-    (match(once,sum(j,w?,n)*invbino(n,j)*den(c?int_,-j,n,k?{>0}))));
+if ((match(once,sum(j,w?,x?{>0},`n')*invbino(`n',j)*den(c?int_,-j,`n',k?{>0})))||
+    (match(once,sum(j,w?,`n')*invbino(`n',j)*den(-j,`n',k?{>0})))||
+    (match(once,sum(j,w?,x?{>0},`n')*invbino(`n',j)*den(-j,`n',k?{>0})))||
+    (match(once,sum(j,w?,`n')*invbino(`n',j)*den(c?int_,-j,`n',k?{>0}))));
     $check7 = 1;
 endif;
 .sort
@@ -8558,28 +8559,28 @@ endif;
 * Now we can start rewriting the inverse binomial sums with n-j as  its denominator into an inverse binomial sum with j as its denominator.
 * First we have the id statements of the inverse binomial sums with c not equal to zero.
 * 
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*sign(j)*S(R(?a),-j,n)*S(R(?b),j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*sign(j)*S(R(?a),j)*S(R(?b),n-j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*S(R(?a),-j,n)*S(R(?b),j) = sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*S(R(?a),j)*S(R(?b),n-j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*sign(j)*S(R(?a),-j,n) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*sign(j)*S(R(?a),j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*S(R(?a),-j,n) = sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*S(R(?a),j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*sign(j)*S(R(?a),j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*sign(j)*S(R(?a),n-j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*S(R(?a),j) = sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*S(R(?a),n-j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1})*sign(j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k*sign(j);
-id sum(j,w?{>0},x?{<0},n)*invbino(n,j)*den(c?,-j,n,k?{>-1}) = sum(j,-x,n-w)*invbino(n,j)*den(j+c)^k;
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*sign(j)*S(R(?a),-j,`n')*S(R(?b),j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*sign(j)*S(R(?a),j)*S(R(?b),`n'-j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*S(R(?a),-j,`n')*S(R(?b),j) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*S(R(?a),j)*S(R(?b),`n'-j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*sign(j)*S(R(?a),-j,`n') = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*sign(j)*S(R(?a),j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*S(R(?a),-j,`n') = sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*S(R(?a),j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*sign(j)*S(R(?a),j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*sign(j)*S(R(?a),`n'-j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*S(R(?a),j) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*S(R(?a),`n'-j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1})*sign(j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k*sign(j);
+id sum(j,w?{>0},x?{<0},`n')*invbino(`n',j)*den(c?,-j,`n',k?{>-1}) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j+c)^k;
 *--#]
 
 *--#[ c=0
 *
 * Next we have the id statements to fix the sum boundaries of the inverse binomial sums with c=0
 *
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*sign(j)*S(R(?a),-j,n)*S(R(?b),j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j)^k*sign(j)*S(R(?a),j)*S(R(?b),n-j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*S(R(?a),-j,n?)*S(R(?b),j) = sum(j,-x,n-w)*invbino(n,j)*den(j)^k*S(R(?a),j)*S(R(?b),n-j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*sign(j)*S(R(?a),-j,n) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j)^k*sign(j)*S(R(?a),j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*S(R(?a),-j,n) = sum(j,-x,n-w)*invbino(n,j)*den(j)^k*S(R(?a),j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*sign(j)*S(R(?a),j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j)^k*sign(j)*S(R(?a),n-j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*S(R(?a),j) = sum(j,-x,n-w)*invbino(n,j)*den(j)^k*S(R(?a),n-j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1})*sign(j) = sign(n)*sum(j,-x,n-w)*invbino(n,j)*den(j)^k*sign(j);
-id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1}) = sum(j,-x,n-w)*invbino(n,j)*den(j)^k;
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*sign(j)*S(R(?a),-j,`n')*S(R(?b),j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*sign(j)*S(R(?a),j)*S(R(?b),`n'-j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*S(R(?a),-j,`n')*S(R(?b),j) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*S(R(?a),j)*S(R(?b),`n'-j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*sign(j)*S(R(?a),-j,`n') = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*sign(j)*S(R(?a),j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*S(R(?a),-j,`n') = sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*S(R(?a),j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*sign(j)*S(R(?a),j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*sign(j)*S(R(?a),`n'-j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*S(R(?a),j) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*S(R(?a),`n'-j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1})*sign(j) = sign(`n')*sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k*sign(j);
+id sum(j,w?{>-1},x?{<0},`n')*invbino(`n',j)*den(-j,`n',k?{>-1}) = sum(j,-x,`n'-w)*invbino(`n',j)*den(j)^k;
 *--#]
 
 *--#[ Notation and checks
@@ -8588,13 +8589,13 @@ id sum(j,w?{>-1},x?{<0},n)*invbino(n,j)*den(-j,n,k?{>-1}) = sum(j,-x,n-w)*invbin
 *
 id sum(j,w?,x?,n?)*den(c?,j,k?{>-1}) = sum(j,w,n+x)*den(j+c)^k;
 id sum(j,w?,x?,n?)*den(j,k?{>-1}) = sum(j,w,n+x)*den(j)^k;
-id sum(j,w?,x?,n?)*invbino(n,j) = sum(j,w,n+x)*invbino(n,j);
-id S(R(?a),-j,n) = S(R(?a),n-j);
+id sum(j,w?,x?,n?)*invbino(`n',j) = sum(j,w,n+x)*invbino(n,j);
+id S(R(?a),-j,`n') = S(R(?a),`n'-j);
 id S(R(?a),n?int_,-j) = S(R(?a),n-j);
 *
 * We add a check to warn the user about not having been able to rewrite the inverse binomial sum into a sum with the correct denominator
 *
-if ((match(once,den(c?,-j,n,k?)))||(match(once,den(-j,n,k?))));
+if ((match(once,den(c?,-j,`n',k?)))||(match(once,den(-j,`n',k?))));
     $check8 = 1;
 endif;
 .sort
