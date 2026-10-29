@@ -784,7 +784,7 @@ if ( match(once,S(R(?a,0,?b),?j)) );
 endif;
 .sort
 #if( '$zeroindex' == 1 )
-    #write "One of the S-sums contained in the inverse binomial sum contains zero as an index. This procedure only works for indices that are not equal to zero. See appendix ???? to see how you can get rid of the 0 index in your S-sum."
+    #write "One of the S-sums contained in the inverse binomial sum contains zero as an index. This procedure only works for indices that are not equal to zero. See the manual to see how you can get rid of the 0 index in your S-sum."
     #terminate
 #endif
 * Here we check if the upper bound of the inverse binomial sum is equal to n-1 and identify the invbino sums with our internal notation
